@@ -14,11 +14,21 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from uranai import BirthChart, TransitChart, SolarReturnChart, Synastry, CompositeChart
-from advanced_interpretation import generate_advanced_interpretation
-from transit_interpretation import generate_comprehensive_transit_interpretation
-from synastry_interpretation import generate_comprehensive_synastry
-from daily_interpretation import generate_daily_forecast
-from comprehensive_analysis import generate_comprehensive_analysis
+
+try:
+    # When running as a package (e.g. via Gunicorn)
+    from web.advanced_interpretation import generate_advanced_interpretation
+    from web.transit_interpretation import generate_comprehensive_transit_interpretation
+    from web.synastry_interpretation import generate_comprehensive_synastry
+    from web.daily_interpretation import generate_daily_forecast
+    from web.comprehensive_analysis import generate_comprehensive_analysis
+except ImportError:
+    # When running locally as script
+    from advanced_interpretation import generate_advanced_interpretation
+    from transit_interpretation import generate_comprehensive_transit_interpretation
+    from synastry_interpretation import generate_comprehensive_synastry
+    from daily_interpretation import generate_daily_forecast
+    from comprehensive_analysis import generate_comprehensive_analysis
 
 
 app = Flask(__name__)
