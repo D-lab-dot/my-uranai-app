@@ -711,6 +711,9 @@ function displayInterpretation(interp, data) {
 
     html += `</div>`; // Close detailed-interpretation
 
+    // Share Section
+    html += _createShareSection('私のホロスコープ鑑定結果', `太陽:${data.sun.sign_jp} 月:${data.moon.sign_jp} アセンダント:${data.ascendant.sign_jp}`);
+
     container.innerHTML = html;
 }
 
@@ -925,7 +928,11 @@ function displayTransitResult(result) {
             });
         }
 
+        // Share Section
+        html += _createShareSection('今日の運勢アドバイス', 'AI占星術Proで今日の運勢を占いました✨');
+
         interpContainer.innerHTML = html;
+
     }
 
     resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1034,6 +1041,9 @@ function displaySynastryResult(result) {
             });
             html += '</div>';
         }
+
+        // Share Section
+        html += _createShareSection('相性診断結果', `二人の相性は${data.score}点！ (${data.level})`);
 
         interpContainer.innerHTML = html;
     }
@@ -1175,6 +1185,9 @@ function displayDailyResult(sign, horoscope) {
                 <div class="detail-value">${horoscope.theme}</div>
             </div>
         </div>
+        <div class="share-container-daily" style="margin-top: 20px;">
+            ${_createShareSection(`${sign.name}の運勢`, `${sign.name}の今日の運勢は★${horoscope.score}！テーマは「${horoscope.theme}」`)}
+        </div>
     `;
 
     resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1183,4 +1196,26 @@ function displayDailyResult(sign, horoscope) {
 function _getColorCode(name) {
     const map = { 'レッド': '#e53e3e', 'ブルー': '#3182ce', 'イエロー': '#d69e2e', 'グリーン': '#38a169', 'ピンク': '#d53f8c', 'パープル': '#805ad5', 'オレンジ': '#dd6b20', 'ホワイト': '#718096', 'ブラック': '#1a202c', 'ゴールド': '#d69e2e', 'シルバー': '#a0aec0', 'ブラウン': '#744210' };
     return map[name] || '#333';
+}
+
+function _createShareSection(title, text) {
+    const url = encodeURIComponent(window.location.origin); // Current App URL
+    const shareText = encodeURIComponent(`${title}\n${text}\n#AIUranaiPro #占星術`);
+
+    return `
+        <div class="share-section" style="margin-top: 30px; text-align: center; padding: 20px; background: #f8fafc; border-radius: 12px;">
+            <h4 style="margin-bottom: 15px; color: #4b5563;">診断結果をシェアする</h4>
+            <div class="share-buttons" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${url}" target="_blank" class="btn-share twitter" style="background: #1da1f2; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <span style="font-size: 1.2em;">𝕏</span> X (Twitter)
+                </a>
+                <a href="https://line.me/R/msg/text/?${shareText}%20${url}" target="_blank" class="btn-share line" style="background: #06c755; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <span style="font-size: 1.2em;">💬</span> LINE
+                </a>
+                <button onclick="navigator.clipboard.writeText('${decodeURIComponent(text)} ' + window.location.href); alert('URLをコピーしました！')" class="btn-share copy" style="background: #e2e8f0; color: #475569; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+                    🔗 コピー
+                </button>
+            </div>
+        </div>
+    `;
 }

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://my-uranai-app.onrender.com/sitemap.xml

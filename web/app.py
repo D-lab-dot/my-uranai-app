@@ -44,6 +44,18 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/robots.txt')
+def robots():
+    """SEO: robots.txtを返す"""
+    return send_from_directory('static', 'robots.txt')
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    """SEO: sitemap.xmlを返す"""
+    return send_from_directory('static', 'sitemap.xml')
+
+
 @app.route('/api/birth-chart', methods=['POST'])
 def birth_chart():
     """出生図API"""
