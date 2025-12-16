@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Uranai Pro - 本格占星術鑑定</title>
+    <meta name="description" content="Swiss Ephemerisによる高精度な占星術計算。出生図、トランジット、相性占いなど無料で利用可能。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- PWA Settings -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/icons/icon.svg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <!-- Stars Background -->
+    <div class="stars"></div>
+    <div class="stars2"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">✧</span>
+                <h1>Uranai</h1>
+                <span class="logo-subtitle">占星術アプリ</span>
+            </div>
+            <nav class="nav">
+                <a href="#birth-chart" class="nav-link active" data-tab="birth-chart">
+                    <span class="nav-icon">☉</span>
+                    ホロスコープ
+                </a>
+                <a href="#transit" class="nav-link" data-tab="transit">
+                    <span class="nav-icon">🌙</span>
+                    トランジット
+                </a>
+                <a href="#synastry" class="nav-link" data-tab="synastry">
+                    <span class="nav-icon">💫</span>
+                    相性診断
+                </a>
+                <a href="#daily" class="nav-link" data-tab="daily">
+                    <span class="nav-icon">⭐</span>
+                    今日の運勢
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+
+            <!-- Birth Chart Tab -->
+            <section id="birth-chart" class="tab-content active">
+                <div class="card form-card">
+                    <h2 class="card-title">
+                        <span class="icon">☉</span>
+                        ホロスコープ作成
+                    </h2>
+
+                    <!-- 初心者向け説明ボックス -->
+                    <div class="feature-explainer">
+                        <div class="explainer-header">
+                            <span class="explainer-icon">📜</span>
+                            <span class="explainer-title">ホロスコープって何？</span>
+                        </div>
+                        <div class="explainer-content">
+                            <p><strong>あなたが生まれた瞬間の「星の配置図」</strong>です。</p>
+                            <ul class="explainer-list">
+                                <li>🎂 <strong>一生変わらない</strong>あなただけの星の設計図</li>
+                                <li>🌟 性格・才能・人生の傾向がわかる</li>
+                                <li>📖 例えるなら「星の誕生証明書」</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        出生情報を入力して、あなたのネイタルチャート（出生図）を作成します。<br>
+                        惑星配置・ハウス・アスペクトなど、本格的なホロスコープ分析を提供します。
+                    </p>
+
+                    <form id="birth-chart-form" class="form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">ニックネーム</label>
+                                <input type="text" id="name" name="name" placeholder="例: はな" maxlength="20" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">生年月日</div>
+                        <div class="form-row form-row-3">
+                            <div class="form-group">
+                                <label for="year">年</label>
+                                <select id="year" name="year" required>
+                                    <option value="">選択</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="month">月</label>
+                                <select id="month" name="month" required>
+                                    <option value="">選択</option>
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="day">日</label>
+                                <select id="day" name="day" required>
+                                    <option value="">選択</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">出生時刻</div>
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="unknown-time" name="unknown_time">
+                                <span class="checkbox-text">出生時刻が不明</span>
+                            </label>
+                            <p class="form-section-hint" id="time-unknown-hint" style="display: none;">
+                                ⚠️ 出生時刻が不明な場合、正午（12:00）で計算します。<br>
+                                アセンダント・ハウス配置は正確でない可能性があります。
+                            </p>
+                        </div>
+                        <div id="time-inputs">
+                            <p class="form-section-hint">正確な時刻がわかると、アセンダントやハウスのカスプを計算できます。</p>
+                            <div class="form-row form-row-2">
+                                <div class="form-group">
+                                    <label for="hour">時（0〜23時）</label>
+                                    <select id="hour" name="hour">
+                                        <option value="12">12時（正午）</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="minute">分（0〜59分）</label>
+                                    <select id="minute" name="minute">
+                                        <option value="0">00分</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section-title">出生地</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">市区町村名（日本語OK）</label>
+                                <input type="text" id="city" name="city" placeholder="例: 札幌市中央区、新宿区" maxlength="100"
+                                    required>
+                            </div>
+                            <div class="form-text small text-muted">
+                                ✓ 良い例: 札幌市中央区、渋谷区、横浜市港北区<br>
+                                ✕ 悪い例: 東京都、日本、アメリカ (範囲が広すぎます)
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-icon">✨</span>
+                            ホロスコープを作成
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Area -->
+                <div id="birth-chart-result" class="result-area hidden">
+
+                    <!-- Chart Info Header -->
+                    <div class="card chart-info-card">
+                        <div id="chart-info-header"></div>
+                    </div>
+
+                    <!-- Horoscope Chart Image -->
+                    <div class="card result-card chart-card">
+                        <h3 class="result-title">🔮 ネイタルチャート</h3>
+                        <div id="chart-svg" class="chart-container"></div>
+                    </div>
+
+                    <!-- Professional Horoscope Data -->
+                    <div class="horoscope-sections">
+
+                        <!-- Planets Section -->
+                        <div class="card horoscope-data-card">
+                            <h3 class="result-title">☉ 惑星配置 (Planets)</h3>
+                            <div id="planets-data" class="horoscope-data"></div>
+                        </div>
+
+                        <!-- Houses Section -->
+                        <div class="card horoscope-data-card">
+                            <h3 class="result-title">🏠 ハウスカスプ (Houses)</h3>
+                            <div id="houses-data" class="horoscope-data"></div>
+                        </div>
+
+                        <!-- Aspects Section -->
+                        <div class="card horoscope-data-card">
+                            <h3 class="result-title">⚹ アスペクト (Aspects)</h3>
+                            <div id="aspects-data" class="horoscope-data"></div>
+                        </div>
+
+                    </div>
+
+                    <!-- Interpretation -->
+                    <div class="card interpretation-card">
+                        <h3 class="result-title">📖 チャート解釈</h3>
+                        <div id="interpretation" class="interpretation-content"></div>
+                    </div>
+
+                    <!-- Advanced Analysis (Gemini-level) -->
+                    <div class="card advanced-analysis-card" id="advanced-analysis-section">
+                        <h3 class="result-title">🔮 詳細分析（プロフェッショナル・リーディング）</h3>
+
+                        <!-- Core Engine Section -->
+                        <div class="analysis-section" id="core-engine-section">
+                            <h4 class="section-title">1. チャートの本質的構造（Core Engine）</h4>
+                            <p class="section-intro">この人生を駆動するエンジンは、以下の要素で構成されています。</p>
+                            <div id="core-engine-content"></div>
+                        </div>
+
+                        <!-- Life Phases Section -->
+                        <div class="analysis-section" id="life-phases-section">
+                            <h4 class="section-title">2. 人生の変曲点（Life Inflection Points）</h4>
+                            <div id="life-phases-content"></div>
+                        </div>
+
+                        <!-- Decade Cycles Section -->
+                        <div class="analysis-section" id="decade-cycles-section">
+                            <h4 class="section-title">3. 10年ごとの運気の流れ（The 10-Year Cycles）</h4>
+                            <div id="decade-cycles-content"></div>
+                        </div>
+
+                        <!-- Marriage & Money Section -->
+                        <div class="analysis-section" id="marriage-money-section">
+                            <h4 class="section-title">4. 結婚と金運の特別分析</h4>
+                            <div id="marriage-money-content"></div>
+                        </div>
+
+                        <!-- Strategic Advice Section -->
+                        <div class="analysis-section" id="strategic-advice-section">
+                            <h4 class="section-title">5. 総合的な戦略アドバイス</h4>
+                            <div id="strategic-advice-content"></div>
+                        </div>
+
+                        <!-- Meta Cognition -->
+                        <div class="analysis-section meta-section" id="meta-section">
+                            <h4 class="section-title">🧠 メタ認知</h4>
+                            <div id="meta-content"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Transit Tab -->
+            <section id="transit" class="tab-content">
+                <div class="card form-card">
+                    <h2 class="card-title">
+                        <span class="icon">🌙</span>
+                        トランジット分析
+                    </h2>
+
+                    <!-- 初心者向け説明ボックス -->
+                    <div class="feature-explainer">
+                        <div class="explainer-header">
+                            <span class="explainer-icon">🔮</span>
+                            <span class="explainer-title">トランジットって何？</span>
+                        </div>
+                        <div class="explainer-content">
+                            <p><strong>今日の星があなたにどう影響するか</strong>を見ます。</p>
+                            <ul class="explainer-list">
+                                <li>🌤️ <strong>毎日変わる</strong>星の天気予報のようなもの</li>
+                                <li>📅 チャンスや注意すべき時期がわかる</li>
+                                <li>🎯 「今」の運勢・タイミングを知りたい時に</li>
+                            </ul>
+                        </div>
+                        <div class="explainer-compare">
+                            <span class="compare-vs">比較</span>
+                            <div class="compare-items">
+                                <div class="compare-item">
+                                    <span class="compare-label">ホロスコープ</span>
+                                    <span class="compare-desc">= 生まれ持った性質（固定）</span>
+                                </div>
+                                <div class="compare-item">
+                                    <span class="compare-label">トランジット</span>
+                                    <span class="compare-desc">= 今の運勢・流れ（毎日変化）</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="card-description">
+                        現在の惑星配置があなたのネイタルチャートにどう影響しているかを分析します。
+                    </p>
+
+                    <form id="transit-form" class="form">
+                        <div class="form-section-title">出生情報</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transit-name">ニックネーム</label>
+                                <input type="text" id="transit-name" name="name" placeholder="例: はな" maxlength="20"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row-3">
+                            <div class="form-group">
+                                <label for="transit-year">生まれた年</label>
+                                <select id="transit-year" name="year" required>
+                                    <option value="">選択</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transit-month">月</label>
+                                <select id="transit-month" name="month" required>
+                                    <option value="">選択</option>
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transit-day">日</label>
+                                <select id="transit-day" name="day" required>
+                                    <option value="">選択</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row-2">
+                            <div class="form-group">
+                                <label for="transit-hour">出生時刻（時）</label>
+                                <select id="transit-hour" name="hour">
+                                    <option value="12">12時</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transit-minute">分</label>
+                                <select id="transit-minute" name="minute">
+                                    <option value="0">00分</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="transit-city">出生地（市区町村名）</label>
+                                <input type="text" id="transit-city" name="city" placeholder="例: 新宿区、横浜市"
+                                    maxlength="100" required>
+                            </div>
+                        </div>
+
+                        <div class="form-divider">
+                            <span>トランジット日付</span>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="target-date">日付を選択</label>
+                                <input type="date" id="target-date" name="target_date" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-icon">🔮</span>
+                            トランジットを分析
+                        </button>
+                    </form>
+                </div>
+
+                <div id="transit-result" class="result-area hidden">
+                    <div class="card result-card">
+                        <h3 class="result-title">🌙 トランジットアスペクト</h3>
+                        <div id="transit-aspects" class="horoscope-data"></div>
+                    </div>
+                    <div class="card result-card">
+                        <h3 class="result-title">📖 解釈</h3>
+                        <div id="transit-interpretation" class="interpretation-content"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Synastry Tab -->
+            <section id="synastry" class="tab-content">
+                <div class="card form-card">
+                    <h2 class="card-title">
+                        <span class="icon">💫</span>
+                        相性診断 (シナストリー)
+                    </h2>
+                    <p class="card-description">
+                        2人のネイタルチャートを比較し、相性を分析します。
+                    </p>
+
+                    <form id="synastry-form" class="form">
+                        <div class="person-section">
+                            <h4 class="person-title">👤 1人目</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="p1-name">ニックネーム</label>
+                                    <input type="text" id="p1-name" name="p1_name" placeholder="例: はな" maxlength="20"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="form-row form-row-3">
+                                <div class="form-group">
+                                    <label for="p1-year">生まれた年</label>
+                                    <select id="p1-year" name="p1_year" required>
+                                        <option value="">選択</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p1-month">月</label>
+                                    <select id="p1-month" name="p1_month" required>
+                                        <option value="">選択</option>
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p1-day">日</label>
+                                    <select id="p1-day" name="p1_day" required>
+                                        <option value="">選択</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="p1-city">出生地（市区町村名）</label>
+                                    <input type="text" id="p1-city" name="p1_city" placeholder="例: 渋谷区、大阪市"
+                                        maxlength="100" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="person-divider">
+                            <span class="heart">♡</span>
+                        </div>
+
+                        <div class="person-section">
+                            <h4 class="person-title">👤 2人目</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="p2-name">ニックネーム</label>
+                                    <input type="text" id="p2-name" name="p2_name" placeholder="例: たろう" maxlength="20"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="form-row form-row-3">
+                                <div class="form-group">
+                                    <label for="p2-year">生まれた年</label>
+                                    <select id="p2-year" name="p2_year" required>
+                                        <option value="">選択</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p2-month">月</label>
+                                    <select id="p2-month" name="p2_month" required>
+                                        <option value="">選択</option>
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p2-day">日</label>
+                                    <select id="p2-day" name="p2_day" required>
+                                        <option value="">選択</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="p2-city">出生地（市区町村名）</label>
+                                    <input type="text" id="p2-city" name="p2_city" placeholder="例: 名古屋市、福岡市"
+                                        maxlength="100" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-love">
+                            <span class="btn-icon">💕</span>
+                            相性を分析
+                        </button>
+                    </form>
+                </div>
+
+                <div id="synastry-result" class="result-area hidden">
+                    <div class="card result-card score-card">
+                        <div id="synastry-score" class="score-display"></div>
+                    </div>
+                    <div class="card result-card">
+                        <h3 class="result-title">💫 シナストリーアスペクト</h3>
+                        <div id="synastry-aspects" class="horoscope-data"></div>
+                    </div>
+                    <div class="card result-card">
+                        <h3 class="result-title">📖 相性解釈</h3>
+                        <div id="synastry-interpretation" class="interpretation-content"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Daily Tab -->
+            <section id="daily" class="tab-content">
+                <div class="card form-card daily-card">
+                    <h2 class="card-title">
+                        <span class="icon">⭐</span>
+                        今日の運勢
+                    </h2>
+                    <p class="card-description" id="today-date"></p>
+                    <p class="card-description">あなたの星座をクリックしてください</p>
+
+                    <div class="zodiac-grid" id="zodiac-grid"></div>
+                </div>
+
+                <div id="daily-result" class="result-area hidden">
+                    <div class="card result-card horoscope-card">
+                        <div id="daily-content"></div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Powered by Swiss Ephemeris • Placidus House System • Made with ✧ in Japan</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>ホロスコープを計算中...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
