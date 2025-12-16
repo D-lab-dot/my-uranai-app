@@ -10,6 +10,8 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 
 # Add parent directory to path for uranai import
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add current directory to path for sibling imports (fixes Render/gunicorn ModuleNotFoundError)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from uranai import BirthChart, TransitChart, SolarReturnChart, Synastry, CompositeChart
 from advanced_interpretation import generate_advanced_interpretation
